@@ -330,6 +330,34 @@ class BezierCurve {
   }
 
   /**
+   * Area under this curve
+   */
+  float getCurveArea() {
+    if (points.length < 3) return 0;
+    float x0 = points[0].x, y0 = points[0].y,
+      x1, y1, x2, y2, x3, y3;
+    if (points.length == 4) {
+      x1 = points[1].x; y1 = points[1].y;
+      x2 = points[2].x; y2 = points[2].y;
+      x3 = points[3].x; y3 = points[3].y;
+    } else if (points.length == 3) {
+      x1 = points[0].x * 1 / 3 + points[1].x * 2 / 3;
+      y1 = points[0].y * 1 / 3 + points[1].y * 2 / 3;
+      x2 = points[2].x * 1 / 3 + points[1].x * 2 / 3;
+      y2 = points[2].y * 1 / 3 + points[1].y * 2 / 3;
+      x3 = points[2].x; y3 = points[2].y;
+    } else {
+      return -1;
+    }
+    return (
+        x0 * (      - 2*y1 -   y2 + 3*y3)
+      + x1 * ( 2*y0        -   y2 -   y3)
+      + x2 * (   y0 +   y1        - 2*y3)
+      + x3 * (-3*y0 +   y1 + 2*y2       )
+    ) * 3 / 20;
+  }
+
+  /**
    * Just the X curvature
    */
   BezierCurve justX(float h) {
@@ -362,6 +390,27 @@ class BezierCurve {
       newPoints[order-i] = points[i];
     }
     points = newPoints;
+    update();
+  }
+
+  /**
+   * Translate this curve horizontally and/or vertically
+   */
+  void translate(float dx, float dy) {
+    for(int i=0; i<points.length; i++) {
+      points[i].x += dx;
+      points[i].y += dy;
+    }
+    update();
+  }
+
+  /**
+   * Rotate this curve around its first point
+   */
+  void rotate(float angle) {
+    for(int i=1; i<points.length; i++) {
+      points[i].rotateOver(points[0], angle);
+    }
     update();
   }
 

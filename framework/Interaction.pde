@@ -50,7 +50,11 @@ void mouseMoved() {
 
 // point/curve dragging
 void mouseDragged() {
-  if(current != -1) {
+  if(shift) {
+    active.translate(mouseX - pmouseX, mouseY - pmouseY);
+  } else if(control) {
+    active.rotate((mouseX - pmouseX) * 0.005);
+  } else if(current != -1) {
     active.movePoint(current, mouseX, mouseY);
   }
   if(moulding) {
@@ -136,6 +140,9 @@ void keyPressed() {
       offset--;
       if(offset<0) offset=0;
       if(!animated || !playing) redraw();
+    }
+    else if(str(key).equals("m")) {
+      curve.reverse();
     }
   }
 }
