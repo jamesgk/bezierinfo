@@ -1,12 +1,18 @@
-        <textarea class="sketch-code" data-sketch-preset="simple" data-sketch-title="Area under a Bézier curve">
+        <textarea class="sketch-code" data-sketch-preset="simple" data-sketch-title="Area of a Bézier curve">
         void setupCurve() {
           setupDefaultCubic();
           reorder();
         }
 
         void drawCurve(BezierCurve curve) {
+          fill(155, 255, 155);
+          Point[] p = curve.points;
+          bezier(p[0].x, p[0].y, p[1].x, p[1].y,
+                 p[2].x, p[2].y, p[3].x, p[3].y);
+          noFill();
+
           curve.draw();
           fill(0);
-          text("area under curve: "+curve.getCurveArea(),15,15);
+          text("curve area: "+curve.getCurveArea(),15,15);
           noFill();
         }</textarea>
