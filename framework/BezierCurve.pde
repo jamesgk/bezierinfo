@@ -330,20 +330,28 @@ class BezierCurve {
   }
 
   /**
-   * Signed area of a cubic curve. Area left of curve is positive, area right of
-   * curve is negative.
+   * Signed area of a curve. Area left of curve is positive, area right of curve
+   * is negative.
    */
   float getCurveArea() {
-    if (order != 3) return 0;
-    float x0 = points[0].x, y0 = points[0].y,
-      x1 = points[1].x - x0, y1 = points[1].y - y0,
-      x2 = points[2].x - x0, y2 = points[2].y - y0,
-      x3 = points[3].x - x0, y3 = points[3].y - y0;
-    return (
-        x1 * (   -   y2 -   y3)
-      + x2 * (y1        - 2*y3)
-      + x3 * (y1 + 2*y2       )
-    ) * 3 / 20;
+    if (order == 2) {
+      float x0 = points[0].x, y0 = points[0].y,
+        x1 = points[1].x - x0, y1 = points[1].y - y0,
+        x2 = points[2].x - x0, y2 = points[2].y - y0;
+      return (x2 * y1 - x1 * y2) / 3;
+    } else if (order == 3) {
+      float x0 = points[0].x, y0 = points[0].y,
+        x1 = points[1].x - x0, y1 = points[1].y - y0,
+        x2 = points[2].x - x0, y2 = points[2].y - y0,
+        x3 = points[3].x - x0, y3 = points[3].y - y0;
+      return (
+          x1 * (   -   y2 -   y3)
+        + x2 * (y1        - 2*y3)
+        + x3 * (y1 + 2*y2       )
+      ) * 3 / 20;
+    } else {
+      return 0;
+    }
   }
 
   /**
